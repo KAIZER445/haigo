@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { MockService } from './mock.service';
 import { Prisma } from 'generated/prisma/browser';
 
@@ -11,5 +11,15 @@ export class MockController {
     @Post()
     create(@Body() createTestDto: Prisma.TestCreateInput){
         return this.mockService.create(createTestDto)
+    }
+
+    @Get(':id')
+    findOne(@Param('id') id:string){
+        return this.mockService.findOne(id)
+    }
+
+    @Get('')
+    findAll(){
+        return this.mockService.findAll()
     }
 }

@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Test {
-  id Int @default(autoincrement()) @id
+  id String @id @default(uuid(7))
   name String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

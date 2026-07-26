@@ -6,9 +6,21 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class MockService {
     constructor(
         private readonly prismaService: PrismaService
-    ){}
+    ) { }
 
-    create(createTestDto: Prisma.TestCreateInput){
-        return this.prismaService.test.create({ data: createTestDto })
+    async create(createTestDto: Prisma.TestCreateInput) {
+        return await this.prismaService.test.create({ data: createTestDto })
+    }
+
+    async findAll() {
+        return await this.prismaService.test.findMany({})
+    }
+
+    async findOne(id: string) {
+        return await this.prismaService.test.findFirst({
+            where: {
+                id
+            }
+        })
     }
 }
