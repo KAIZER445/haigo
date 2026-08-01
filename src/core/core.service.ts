@@ -1,12 +1,34 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { customAlphabet } from 'nanoid';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CoreInputDto } from './dto/core.dto';
 
 
 @Injectable()
 export class CoreService {
-    private readonly generateId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 8);
-    urlShortner(baseApp: string): string {
-        const newUrl = baseApp + this.generateId()
-        return (newUrl + "")
+
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly configService: ConfigService
+    ) { }
+
+    async urlShortner(originalUrl: CoreInputDto) {
+        const baseApp = this.configService.get<string>('BASE_APP')
+        if (!baseApp) {
+            return "base app failed"
+        }
+        const generateId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 8);
+        const newUrl = baseApp + generateId()
+        return await this.prismaService.core.create({
+            data: {
+                ...originalUrl,
+                shortenedUrl: newUrl
+            }
+        })
+    }
+
+    async getAllUrls(){
+        return await this.prismaService.core.findMany({})
     }
 }

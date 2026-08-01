@@ -27,3 +27,12 @@ enum Availability {
   IN_STORE
   ONLINE
 }
+
+model Core {
+  id String @id @default(uuid(7))
+  originalUrl String @unique
+  shortenedUrl String @unique
+  activeStatus Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
