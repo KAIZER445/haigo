@@ -28,7 +28,14 @@ export class CoreService {
         })
     }
 
-    async getAllUrls(){
+    async getAllUrls() {
         return await this.prismaService.core.findMany({})
+    }
+
+    redirectToOriginalUrl(shortenedUrl: string) {
+        const baseApp = this.configService.get<string>('BASE_APP')
+        return this.prismaService.core.findUnique({
+            where: { shortenedUrl: baseApp + shortenedUrl }
+        })
     }
 }
