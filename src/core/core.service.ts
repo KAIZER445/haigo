@@ -10,20 +10,15 @@ export class CoreService {
 
     constructor(
         private readonly prismaService: PrismaService,
-        private readonly configService: ConfigService
     ) { }
 
     async urlShortner(originalUrl: CoreInputDto) {
-        const baseApp = this.configService.get<string>('BASE_APP')
-        if (!baseApp) {
-            return "base app failed"
-        }
         const generateId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz', 8);
-        const newUrl = baseApp + generateId()
+        const newUrlCode = generateId()
         return await this.prismaService.core.create({
             data: {
                 ...originalUrl,
-                shortenedUrl: newUrl
+                shortCode: newUrlCode
             }
         })
     }
@@ -32,10 +27,9 @@ export class CoreService {
         return await this.prismaService.core.findMany({})
     }
 
-    redirectToOriginalUrl(shortenedUrl: string) {
-        const baseApp = this.configService.get<string>('BASE_APP')
+    redirectToOriginalUrl(shortCode) {
         return this.prismaService.core.findUnique({
-            where: { shortenedUrl: baseApp + shortenedUrl }
+            where: { shortCode: shortCode }
         })
     }
 }
