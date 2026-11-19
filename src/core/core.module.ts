@@ -6,6 +6,6 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [ConfigModule],
   controllers: [CoreController],
-  providers: [CoreService]
+  providers: [CoreService],
 })
 export class CoreModule {}
